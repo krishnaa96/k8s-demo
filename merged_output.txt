@@ -1,0 +1,134 @@
+===== configmap.yaml =====
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-config
+data:
+  key1: "value1"
+  key2: "value2"
+
+
+===== cronjob.yaml =====
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello-cronjob
+spec:
+  schedule: "*/1 * * * *"  # Runs every minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello-container
+            image: busybox
+            command: ["/bin/sh", "-c", "while true; do echo 'Hello from Kubernetes CronJob!'; sleep 2; done"]
+          restartPolicy: Never
+
+
+===== deployment.yaml =====
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - name: my-container
+        image: nginx
+
+
+===== job.yaml =====
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: hello-container
+        image: busybox
+        command: ["echo", "Hello SSN from Kubernetes Job!"]
+      restartPolicy: Never
+
+
+===== pod.yaml =====
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-pod
+spec:
+  containers:
+  - name: my-container
+    image: busybox
+    command: ["echo", "Hello from Kubernetes Pod!"]
+
+
+===== pv-pvc.yaml =====
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: demo-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/demo"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: demo-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+
+
+===== secret.yaml =====
+apiVersion: v1
+kind: Secret
+metadata:
+  name: demo-secret
+type: Opaque
+data:
+  password: cGFzc3dvcmQ=  # Base64 encoded "password"
+
+
+===== statefulset.yaml =====
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: demo-statefulset
+spec:
+  serviceName: "demo-service"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - name: my-container
+        image: nginx
+
+
